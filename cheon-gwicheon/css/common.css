@@ -1,0 +1,281 @@
+/* ═══════════════════════════════════════
+   POEM GAME — 귀천 (歸天)
+   천상병
+   ═══════════════════════════════════════ */
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;background:#03050c;cursor:none;font-family:'Noto Sans KR',sans-serif;}
+
+/* ─── Stage wrapper ─── */
+.sw{display:none;position:fixed;inset:0;width:100%;height:100%;overflow:hidden;}
+.sw.active{display:block;}
+
+/* ─── Shared keyframes ─── */
+@keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes glow{0%,100%{text-shadow:0 0 30px rgba(200,225,255,0.4)}50%{text-shadow:0 0 60px rgba(220,240,255,0.7)}}
+
+/* ─── Screen transition ─── */
+#screen-transition{
+  position:fixed;inset:0;z-index:600;
+  background:rgba(3,5,12,0);pointer-events:none;
+  transition:background 0.7s;
+}
+#screen-transition.black{background:rgba(3,5,12,1);}
+
+/* ─── Stage interlude ─── */
+#stage-interlude{
+  position:fixed;inset:0;z-index:601;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  pointer-events:none;opacity:0;transition:opacity 0.6s;
+}
+#stage-interlude.show{opacity:1;}
+#stage-interlude .si-label{font-size:11px;color:rgba(180,200,235,0.5);letter-spacing:0.2em;margin-bottom:0.8rem;}
+#stage-interlude .si-title{font-family:'Noto Serif KR',serif;font-size:22px;color:rgba(220,230,255,0.9);letter-spacing:0.12em;}
+
+/* ═══════════════════════════════
+   MENU SCREEN
+   ═══════════════════════════════ */
+#menu-screen{
+  position:fixed;inset:0;z-index:500;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at center,#0a1020 0%,#03050c 70%);
+  transition:opacity 1.5s;
+}
+#menu-screen.out{opacity:0;pointer-events:none;}
+#menu-screen .menu-tag{font-size:11px;color:rgba(180,195,225,0.5);letter-spacing:0.25em;margin-bottom:2rem;animation:fu 1s 0.3s both;}
+#menu-screen .menu-title{
+  font-family:'Noto Serif KR',serif;font-size:clamp(36px,7vw,64px);
+  color:rgba(225,230,250,0.96);letter-spacing:0.18em;text-align:center;
+  line-height:1.3;margin-bottom:0.8rem;animation:fu 1s 0.7s both;
+  text-shadow:0 0 80px rgba(160,180,255,0.25);
+  display:flex;align-items:baseline;justify-content:center;gap:0.4em;
+}
+#menu-screen .menu-title-han{font-size:0.45em;color:rgba(180,200,240,0.45);letter-spacing:0.12em;}
+#menu-screen .menu-author{font-family:'Noto Serif KR',serif;font-size:14px;color:rgba(180,200,240,0.5);letter-spacing:0.12em;margin-bottom:0.3rem;animation:fu 1s 1s both;}
+#menu-screen .menu-year{font-size:11px;color:rgba(140,160,200,0.3);letter-spacing:0.1em;margin-bottom:3.5rem;animation:fu 1s 1.1s both;}
+#menu-screen .menu-buttons{display:flex;flex-direction:column;gap:10px;animation:fu 1s 1.4s both;}
+.menu-btn{
+  padding:12px 50px;background:transparent;cursor:none;
+  border:0.5px solid rgba(180,200,240,0.18);border-radius:3px;
+  color:rgba(190,210,250,0.6);font-family:'Noto Serif KR',serif;
+  font-size:13px;letter-spacing:0.12em;text-align:center;
+  transition:all 0.3s;
+}
+.menu-btn:hover{
+  background:rgba(150,180,255,0.06);
+  border-color:rgba(200,220,255,0.45);
+  color:rgba(225,235,255,0.95);
+}
+
+/* ═══════════════════════════════
+   SETTINGS SCREEN
+   ═══════════════════════════════ */
+#settings-screen{
+  position:fixed;inset:0;z-index:510;
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  background:#03050c;
+}
+#settings-screen.active{display:flex;}
+#settings-screen .set-title{
+  font-family:'Noto Serif KR',serif;font-size:22px;
+  color:rgba(215,225,255,0.9);letter-spacing:0.12em;
+  margin-bottom:2.5rem;animation:fu 0.8s both;
+}
+#settings-screen .set-section{
+  max-width:440px;width:90%;margin-bottom:2rem;
+  animation:fu 0.8s 0.2s both;
+}
+#settings-screen .set-section h3{
+  font-size:12px;color:rgba(170,190,225,0.55);
+  letter-spacing:0.2em;margin-bottom:0.8rem;
+  font-weight:400;text-transform:uppercase;
+}
+#settings-screen .set-section p,
+#settings-screen .set-section .key-row{
+  font-size:13px;color:rgba(180,200,235,0.65);
+  line-height:2;letter-spacing:0.04em;
+}
+.key-row{display:flex;gap:12px;align-items:center;margin-bottom:4px;}
+.key-label{
+  display:inline-block;min-width:80px;
+  padding:3px 10px;background:rgba(140,160,210,0.08);
+  border:0.5px solid rgba(170,190,235,0.2);border-radius:3px;
+  font-size:12px;color:rgba(180,200,235,0.7);
+  font-family:'Noto Sans KR',monospace;text-align:center;
+}
+.key-desc{font-size:13px;color:rgba(170,190,225,0.55);}
+#settings-screen .back-btn{
+  margin-top:2rem;padding:10px 36px;background:transparent;cursor:none;
+  border:0.5px solid rgba(180,200,240,0.2);border-radius:3px;
+  color:rgba(180,200,235,0.5);font-family:'Noto Serif KR',serif;
+  font-size:12px;letter-spacing:0.1em;transition:all 0.25s;
+  animation:fu 0.8s 0.4s both;
+}
+#settings-screen .back-btn:hover{
+  border-color:rgba(200,220,255,0.4);color:rgba(220,230,255,0.85);
+}
+
+/* ═══════════════════════════════
+   POEM INFO SCREEN
+   ═══════════════════════════════ */
+#poem-screen{
+  position:fixed;inset:0;z-index:510;
+  display:none;flex-direction:column;align-items:center;justify-content:flex-start;
+  background:#03050c;overflow-y:auto;
+}
+#poem-screen.active{display:flex;}
+#poem-screen .poem-info-wrap{
+  max-width:520px;width:90%;padding:60px 0;
+}
+#poem-screen .pi-title{
+  font-family:'Noto Serif KR',serif;font-size:26px;
+  color:rgba(220,230,255,0.92);letter-spacing:0.12em;
+  text-align:center;margin-bottom:0.5rem;animation:fu 0.8s both;
+}
+#poem-screen .pi-author{
+  font-size:13px;color:rgba(170,190,225,0.5);
+  text-align:center;letter-spacing:0.1em;
+  margin-bottom:2.5rem;animation:fu 0.8s 0.2s both;
+}
+#poem-screen .pi-poem{
+  font-family:'Noto Serif KR',serif;font-size:15px;
+  color:rgba(205,220,250,0.85);line-height:2.4;
+  letter-spacing:0.08em;text-align:center;
+  margin-bottom:2.5rem;animation:fu 0.8s 0.3s both;
+}
+#poem-screen .pi-desc{
+  font-size:13px;color:rgba(165,185,220,0.6);
+  line-height:2.2;letter-spacing:0.04em;
+  animation:fu 0.8s 0.5s both;
+}
+#poem-screen .pi-desc p{margin-bottom:1.2rem;}
+#poem-screen .back-btn{
+  display:block;margin:2rem auto 1rem;padding:10px 36px;background:transparent;cursor:none;
+  border:0.5px solid rgba(180,200,240,0.2);border-radius:3px;
+  color:rgba(180,200,235,0.5);font-family:'Noto Serif KR',serif;
+  font-size:12px;letter-spacing:0.1em;transition:all 0.25s;
+  animation:fu 0.8s 0.6s both;
+}
+#poem-screen .back-btn:hover{
+  border-color:rgba(200,220,255,0.4);color:rgba(220,230,255,0.85);
+}
+
+/* ═══════════════════════════════
+   COMMON STAGE HUD
+   ═══════════════════════════════ */
+.sw canvas{position:fixed;inset:0;width:100%;height:100%;display:block;}
+.sw [id$="bg_canvas"]{z-index:0;}
+.sw [id$="game_canvas"]{z-index:1;}
+.sw [id$="cursor"]{position:fixed;pointer-events:none;z-index:9999;width:20px;height:20px;margin:-10px 0 0 -10px;transition:transform 0.1s;}
+
+/* ═══════════════════════════════
+   STAGE 1 — 새벽빛과 이슬
+   ═══════════════════════════════ */
+#sw1{background:#0a1020;}
+#sw1 #s1cursor circle{fill:rgba(200,220,255,0.7);}
+#sw1 #s1hud{position:fixed;inset:0;pointer-events:none;z-index:100;}
+#sw1 #s1poem_strip{position:absolute;top:0;left:0;right:0;padding:18px 24px 14px;background:linear-gradient(180deg,rgba(8,14,30,0.85) 0%,transparent 100%);font-family:'Noto Serif KR',serif;}
+#sw1 .poem-line{font-size:15px;color:rgba(170,190,225,0.45);line-height:1.9;letter-spacing:0.08em;transition:color 0.8s,opacity 0.8s,text-shadow 0.8s;opacity:0.4;}
+#sw1 .poem-line.collected{color:rgba(220,235,255,0.95);opacity:1;text-shadow:0 0 22px rgba(170,200,255,0.5);}
+#sw1 #s1stage_label{position:absolute;top:18px;right:24px;font-size:11px;color:rgba(160,180,215,0.6);letter-spacing:0.15em;text-transform:uppercase;}
+#sw1 #s1fragment_hud{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:8px;}
+#sw1 .frag-dot{width:10px;height:10px;border-radius:50%;border:1.5px solid rgba(180,200,240,0.4);transition:all 0.4s;}
+#sw1 .frag-dot.collected{background:rgba(200,225,255,0.85);border-color:rgba(200,225,255,0.85);box-shadow:0 0 10px rgba(170,200,255,0.6);}
+#sw1 #s1ctrl{position:absolute;bottom:24px;right:24px;font-size:11px;color:rgba(150,175,215,0.45);line-height:1.8;text-align:right;}
+#sw1 #s1word_popup{position:absolute;pointer-events:none;font-family:'Noto Serif KR',serif;font-size:22px;color:rgba(225,235,255,0.95);text-shadow:0 0 30px rgba(160,200,255,0.8),0 0 60px rgba(120,170,230,0.4);letter-spacing:0.1em;transition:opacity 0.6s,transform 0.6s;opacity:0;}
+#sw1 #s1word_popup.show{opacity:1;transform:translateY(-20px);}
+#sw1 #s1stage_clear{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(8,14,30,0);pointer-events:none;transition:background 1.5s;}
+#sw1 #s1stage_clear.show{background:rgba(8,14,30,0.88);pointer-events:all;}
+#sw1 #s1stage_clear .clear-poem{font-family:'Noto Serif KR',serif;font-size:20px;color:rgba(210,225,255,0);line-height:2.2;text-align:center;letter-spacing:0.12em;transition:color 2s 0.5s,text-shadow 2s 0.5s;margin-bottom:2.5rem;}
+#sw1 #s1stage_clear.show .clear-poem{color:rgba(220,235,255,0.96);text-shadow:0 0 40px rgba(160,200,255,0.6);}
+#sw1 #s1stage_clear .poet-note{font-size:12px;color:rgba(160,190,225,0);letter-spacing:0.1em;transition:color 1.5s 1.5s;}
+#sw1 #s1stage_clear.show .poet-note{color:rgba(170,195,230,0.7);}
+#sw1 #s1title_screen{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#0c1428 0%,#040810 80%);transition:opacity 1.5s;}
+#sw1 #s1title_screen.fade-out{opacity:0;pointer-events:none;}
+#sw1 .title-label{font-size:11px;color:rgba(150,175,210,0.6);letter-spacing:0.2em;margin-bottom:2rem;animation:fadeUp 1s 0.3s both;}
+#sw1 .title-main{font-family:'Noto Serif KR',serif;font-size:clamp(40px,8vw,64px);color:rgba(220,235,255,0.95);letter-spacing:0.12em;line-height:1.3;text-align:center;margin-bottom:1.2rem;animation:fadeUp 1s 0.6s both;text-shadow:0 0 50px rgba(140,180,255,0.4);}
+#sw1 .title-han{font-size:0.4em;color:rgba(180,200,240,0.5);letter-spacing:0.18em;}
+#sw1 .title-sub{font-size:13px;color:rgba(170,195,225,0.6);letter-spacing:0.08em;margin-bottom:3rem;animation:fadeUp 1s 0.9s both;}
+#sw1 .title-author{font-family:'Noto Serif KR',serif;font-size:14px;color:rgba(180,200,235,0.5);letter-spacing:0.12em;margin-bottom:4rem;animation:fadeUp 1s 1.1s both;}
+#sw1 #s1start_btn{padding:14px 50px;background:transparent;border:0.5px solid rgba(180,205,250,0.35);border-radius:3px;color:rgba(200,220,255,0.85);font-family:'Noto Serif KR',serif;font-size:15px;letter-spacing:0.15em;cursor:none;transition:all 0.3s;animation:fadeUp 1s 1.5s both;}
+#sw1 #s1start_btn:hover{background:rgba(180,205,250,0.06);border-color:rgba(180,205,250,0.7);color:rgba(225,235,255,1);box-shadow:0 0 30px rgba(140,180,255,0.18);}
+
+/* ═══════════════════════════════
+   STAGE 2 — 노을빛 기슭
+   ═══════════════════════════════ */
+#sw2{background:#1a0e10;}
+#sw2 #s2cursor circle{fill:rgba(255,180,120,0.8);}
+#sw2 #s2hud{position:fixed;inset:0;pointer-events:none;z-index:100;}
+#sw2 #s2poem_strip{position:absolute;top:0;left:0;right:0;padding:18px 24px 14px;background:linear-gradient(180deg,rgba(26,14,16,0.85) 0%,transparent 100%);font-family:'Noto Serif KR',serif;}
+#sw2 .poem-line{font-size:15px;color:rgba(220,170,140,0.45);line-height:1.9;letter-spacing:0.08em;transition:all 0.8s;opacity:0.4;}
+#sw2 .poem-line.collected{color:rgba(255,215,170,0.95);opacity:1;text-shadow:0 0 22px rgba(255,170,100,0.5);}
+#sw2 #s2stage_label{position:absolute;top:18px;right:24px;font-size:11px;color:rgba(220,170,140,0.6);letter-spacing:0.15em;text-transform:uppercase;}
+#sw2 #s2fragment_hud{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:8px;}
+#sw2 .frag-dot{width:10px;height:10px;border-radius:50%;border:1.5px solid rgba(255,180,120,0.4);transition:all 0.4s;}
+#sw2 .frag-dot.collected{background:rgba(255,200,140,0.85);border-color:rgba(255,200,140,0.85);box-shadow:0 0 10px rgba(255,170,90,0.6);}
+#sw2 #s2ctrl{position:absolute;bottom:24px;right:24px;font-size:11px;color:rgba(230,180,140,0.45);line-height:1.8;text-align:right;}
+#sw2 #s2mount_hint{position:absolute;left:50%;top:55%;transform:translateX(-50%);font-size:12px;color:rgba(255,210,160,0.85);letter-spacing:0.12em;background:rgba(40,15,5,0.55);padding:6px 14px;border:0.5px solid rgba(255,200,140,0.4);border-radius:3px;opacity:0;transition:opacity 0.4s;}
+#sw2 #s2mount_hint.show{opacity:1;}
+#sw2 #s2mounted_bar{position:absolute;top:60px;left:50%;transform:translateX(-50%);font-size:12px;color:rgba(255,220,180,0.9);letter-spacing:0.15em;background:rgba(40,15,5,0.6);padding:5px 14px;border:0.5px solid rgba(255,200,140,0.4);border-radius:3px;opacity:0;transition:opacity 0.4s;}
+#sw2 #s2mounted_bar.show{opacity:1;}
+#sw2 #s2word_popup{position:absolute;pointer-events:none;font-family:'Noto Serif KR',serif;font-size:22px;color:rgba(255,225,190,0.96);text-shadow:0 0 30px rgba(255,180,100,0.8),0 0 60px rgba(230,140,70,0.4);letter-spacing:0.1em;opacity:0;transition:opacity 0.6s,transform 0.6s;}
+#sw2 #s2word_popup.show{opacity:1;transform:translateY(-20px);}
+#sw2 #s2stage_clear{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(26,14,16,0);pointer-events:none;transition:background 1.5s;}
+#sw2 #s2stage_clear.show{background:rgba(26,14,16,0.88);pointer-events:all;}
+#sw2 #s2stage_clear .clear-poem{font-family:'Noto Serif KR',serif;font-size:20px;color:rgba(255,220,180,0);line-height:2.2;text-align:center;letter-spacing:0.12em;transition:color 2s 0.5s,text-shadow 2s 0.5s;margin-bottom:2.5rem;}
+#sw2 #s2stage_clear.show .clear-poem{color:rgba(255,225,185,0.95);text-shadow:0 0 40px rgba(255,170,90,0.55);}
+#sw2 #s2stage_clear .poet-note{font-size:12px;color:rgba(230,180,140,0);letter-spacing:0.1em;transition:color 1.5s 1.5s;}
+#sw2 #s2stage_clear.show .poet-note{color:rgba(230,190,150,0.75);}
+#sw2 #s2title_screen{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 60%,#341a18 0%,#0d0608 80%);transition:opacity 1.5s;}
+#sw2 #s2title_screen.out{opacity:0;pointer-events:none;}
+#sw2 .title-label{font-size:11px;color:rgba(220,170,140,0.6);letter-spacing:0.2em;margin-bottom:2rem;animation:fadeUp 1s 0.3s both;}
+#sw2 .title-main{font-family:'Noto Serif KR',serif;font-size:clamp(36px,6vw,52px);color:rgba(255,225,185,0.96);letter-spacing:0.1em;line-height:1.3;text-align:center;margin-bottom:1.2rem;animation:fadeUp 1s 0.6s both;text-shadow:0 0 50px rgba(255,150,80,0.4);}
+#sw2 .title-sub{font-size:13px;color:rgba(230,180,140,0.6);letter-spacing:0.08em;margin-bottom:1.6rem;animation:fadeUp 1s 0.9s both;}
+#sw2 .title-verse{font-family:'Noto Serif KR',serif;font-size:14px;color:rgba(240,200,160,0.65);letter-spacing:0.08em;line-height:2;text-align:center;margin-bottom:3.4rem;animation:fadeUp 1s 1.1s both;}
+#sw2 #s2start_btn{padding:14px 50px;background:transparent;border:0.5px solid rgba(255,180,120,0.35);border-radius:3px;color:rgba(255,210,160,0.85);font-family:'Noto Serif KR',serif;font-size:15px;letter-spacing:0.15em;cursor:none;transition:all 0.3s;animation:fadeUp 1s 1.5s both;}
+#sw2 #s2start_btn:hover{background:rgba(255,180,120,0.06);border-color:rgba(255,180,120,0.7);color:rgba(255,225,185,1);box-shadow:0 0 30px rgba(255,150,70,0.18);}
+
+/* ═══════════════════════════════
+   STAGE 3 — 아름다웠더라 (귀천)
+   ═══════════════════════════════ */
+#sw3{background:#080614;}
+#sw3 #s3cursor circle{fill:rgba(220,200,255,0.85);}
+#sw3 #s3hud{position:fixed;inset:0;pointer-events:none;z-index:100;}
+#sw3 #s3poem_strip{position:absolute;top:0;left:0;right:0;padding:18px 24px 14px;background:linear-gradient(180deg,rgba(8,6,20,0.85) 0%,transparent 100%);font-family:'Noto Serif KR',serif;}
+#sw3 .poem-line{font-size:15px;color:rgba(180,170,225,0.45);line-height:1.9;letter-spacing:0.08em;transition:all 0.8s;opacity:0.4;}
+#sw3 .poem-line.collected{color:rgba(230,220,255,0.96);opacity:1;text-shadow:0 0 26px rgba(190,170,255,0.55);}
+#sw3 #s3stage_label{position:absolute;top:18px;right:24px;font-size:11px;color:rgba(190,180,230,0.6);letter-spacing:0.15em;text-transform:uppercase;}
+#sw3 #s3fragment_hud{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:8px;}
+#sw3 .frag-dot{width:10px;height:10px;border-radius:50%;border:1.5px solid rgba(200,180,255,0.4);transition:all 0.4s;}
+#sw3 .frag-dot.collected{background:rgba(220,200,255,0.85);border-color:rgba(220,200,255,0.85);box-shadow:0 0 12px rgba(190,170,255,0.7);}
+#sw3 #s3ctrl{position:absolute;bottom:24px;right:24px;font-size:11px;color:rgba(180,170,220,0.45);line-height:1.8;text-align:right;}
+#sw3 #s3word_popup{position:absolute;pointer-events:none;font-family:'Noto Serif KR',serif;font-size:22px;color:rgba(235,225,255,0.96);text-shadow:0 0 30px rgba(190,170,255,0.8),0 0 60px rgba(150,130,230,0.4);letter-spacing:0.1em;opacity:0;transition:opacity 0.6s,transform 0.6s;}
+#sw3 #s3word_popup.show{opacity:1;transform:translateY(-20px);}
+#sw3 #s3ascend_overlay{position:fixed;inset:0;z-index:199;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,rgba(220,200,255,0) 0%,rgba(8,6,20,0) 100%);transition:background 3s;}
+#sw3 #s3ascend_overlay.show{background:radial-gradient(ellipse at 50% 50%,rgba(220,200,255,0.18) 0%,rgba(8,6,20,0) 70%);}
+#sw3 #s3ascend_text{position:absolute;left:50%;top:38%;transform:translateX(-50%);font-family:'Noto Serif KR',serif;font-size:24px;color:rgba(235,225,255,0);letter-spacing:0.18em;text-align:center;text-shadow:0 0 40px rgba(190,170,255,0.6);transition:color 2s,opacity 2s;white-space:nowrap;}
+#sw3 #s3ascend_overlay.show #s3ascend_text{color:rgba(235,225,255,0.96);}
+#sw3 #s3stage_clear{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(8,6,20,0);pointer-events:none;transition:background 1.5s;}
+#sw3 #s3stage_clear.show{background:rgba(8,6,20,0.85);pointer-events:all;}
+#sw3 #s3stage_clear .clear-poem{font-family:'Noto Serif KR',serif;font-size:20px;color:rgba(230,220,255,0);line-height:2.2;text-align:center;letter-spacing:0.12em;transition:color 2s 0.5s,text-shadow 2s 0.5s;margin-bottom:2.5rem;}
+#sw3 #s3stage_clear.show .clear-poem{color:rgba(235,225,255,0.96);text-shadow:0 0 40px rgba(190,170,255,0.6);}
+#sw3 #s3stage_clear .poet-note{font-size:12px;color:rgba(190,180,230,0);letter-spacing:0.1em;transition:color 1.5s 1.5s;}
+#sw3 #s3stage_clear.show .poet-note{color:rgba(195,185,235,0.75);}
+#sw3 #s3title_screen{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#100822 0%,#03020a 80%);transition:opacity 1.5s;}
+#sw3 #s3title_screen.out{opacity:0;pointer-events:none;}
+#sw3 .title-label{font-size:11px;color:rgba(180,170,220,0.6);letter-spacing:0.2em;margin-bottom:2rem;animation:fadeUp 1s 0.3s both;}
+#sw3 .title-main{font-family:'Noto Serif KR',serif;font-size:clamp(36px,6vw,52px);color:rgba(235,225,255,0.96);letter-spacing:0.1em;line-height:1.3;text-align:center;margin-bottom:1.2rem;animation:fadeUp 1s 0.6s both;text-shadow:0 0 60px rgba(180,150,255,0.4);}
+#sw3 .title-sub{font-size:13px;color:rgba(190,180,230,0.6);letter-spacing:0.08em;margin-bottom:1.6rem;animation:fadeUp 1s 0.9s both;}
+#sw3 .title-verse{font-family:'Noto Serif KR',serif;font-size:14px;color:rgba(210,200,250,0.65);letter-spacing:0.08em;line-height:2;text-align:center;margin-bottom:3.4rem;animation:fadeUp 1s 1.1s both;}
+#sw3 #s3start_btn{padding:14px 50px;background:transparent;border:0.5px solid rgba(200,180,255,0.35);border-radius:3px;color:rgba(220,205,255,0.85);font-family:'Noto Serif KR',serif;font-size:15px;letter-spacing:0.15em;cursor:none;transition:all 0.3s;animation:fadeUp 1s 1.5s both;}
+#sw3 #s3start_btn:hover{background:rgba(200,180,255,0.06);border-color:rgba(200,180,255,0.7);color:rgba(235,225,255,1);box-shadow:0 0 30px rgba(170,140,255,0.2);}
+
+/* ─── Ending screen ─── */
+#sw3 #s3ending_screen{position:fixed;inset:0;z-index:400;display:none;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#0c0820 0%,#02010a 80%);overflow-y:auto;padding:60px 20px;}
+#sw3 #s3ending_screen.show{display:flex;}
+#sw3 #s3ending_poem{font-family:'Noto Serif KR',serif;font-size:17px;color:rgba(230,220,255,0.95);line-height:2.4;letter-spacing:0.1em;text-align:center;margin-bottom:2.4rem;text-shadow:0 0 30px rgba(180,160,255,0.4);animation:fu 2s 0.5s both;}
+#sw3 #s3ending_poet{font-size:13px;color:rgba(195,185,235,0.6);letter-spacing:0.12em;margin-bottom:2.6rem;animation:fu 2s 1.4s both;}
+#sw3 #s3ending_author_note{font-size:12.5px;color:rgba(180,175,220,0.55);line-height:2.2;letter-spacing:0.05em;text-align:center;max-width:520px;margin-bottom:2.8rem;animation:fu 2s 2s both;}
+#sw3 #s3restart_btn{padding:12px 42px;background:transparent;border:0.5px solid rgba(200,180,255,0.3);border-radius:3px;color:rgba(210,195,250,0.7);font-family:'Noto Serif KR',serif;font-size:13px;letter-spacing:0.12em;cursor:none;transition:all 0.3s;animation:fu 2s 2.6s both;}
+#sw3 #s3restart_btn:hover{border-color:rgba(200,180,255,0.6);color:rgba(235,225,255,0.95);background:rgba(200,180,255,0.05);}

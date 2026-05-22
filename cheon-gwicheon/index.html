@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>귀천 — POEM GAME</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/common.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     MENU SCREEN
+     ═══════════════════════════════════════════ -->
+<div id="menu-screen">
+  <div class="menu-tag">POEM GAME · 제2편</div>
+  <div class="menu-title">귀천<span class="menu-title-han">歸天</span></div>
+  <div class="menu-author">천상병 (千祥炳)</div>
+  <div class="menu-year">1970</div>
+  <div class="menu-buttons">
+    <button class="menu-btn" onclick="GameController.startGame()">시작하기</button>
+    <button class="menu-btn" onclick="GameController.showSettings()">설정</button>
+    <button class="menu-btn" onclick="GameController.showPoemInfo()">귀천이란</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SETTINGS SCREEN
+     ═══════════════════════════════════════════ -->
+<div id="settings-screen">
+  <div class="set-title">설정</div>
+
+  <div class="set-section">
+    <h3>조작키</h3>
+    <div class="key-row"><span class="key-label">← → ↑</span><span class="key-desc">이동 및 점프</span></div>
+    <div class="key-row"><span class="key-label">A D W</span><span class="key-desc">이동 및 점프 (대체)</span></div>
+    <div class="key-row"><span class="key-label">Space</span><span class="key-desc">점프</span></div>
+    <div class="key-row"><span class="key-label">E</span><span class="key-desc">오브젝트 조사</span></div>
+    <div class="key-row"><span class="key-label">R</span><span class="key-desc">구름에 올라타기 / 내리기</span></div>
+  </div>
+
+  <div class="set-section">
+    <h3>프로그램 구성</h3>
+    <p>
+      이 게임은 천상병의 시 「귀천」을 세 개의 스테이지로 나누어,
+      각 구절의 파편을 수집하며 시를 완성하는 횡스크롤 탐험 게임입니다.<br><br>
+      각 스테이지는 시의 한 연(聯)에 대응하며,
+      흩어진 시어(詩語)를 모두 모으면 자동으로 다음 스테이지로 넘어갑니다.<br><br>
+      모든 그래픽은 HTML5 Canvas로 실시간 렌더링되며,
+      새벽 — 노을 — 별빛으로 이어지는 하루의 풍경 속에서
+      이 세상 소풍을 마치는 시인의 발걸음을 따라가게 됩니다.
+    </p>
+  </div>
+
+  <button class="back-btn" onclick="GameController.showMenu()">← 돌아가기</button>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     POEM INFO SCREEN
+     ═══════════════════════════════════════════ -->
+<div id="poem-screen">
+  <div class="poem-info-wrap">
+    <div class="pi-title">귀천 (歸天)</div>
+    <div class="pi-author">천상병 (千祥炳, 1930–1993)</div>
+
+    <div class="pi-poem">
+      나 하늘로 돌아가리라.<br>
+      새벽빛 와 닿으면 스러지는<br>
+      이슬 더불어 손에 손을 잡고,<br><br>
+      나 하늘로 돌아가리라.<br>
+      노을빛 함께 단 둘이서<br>
+      기슭에서 놀다가 구름 손짓하면은,<br><br>
+      나 하늘로 돌아가리라.<br>
+      아름다운 이 세상 소풍 끝내는 날,<br>
+      가서, 아름다웠더라고 말하리라……
+    </div>
+
+    <div class="pi-desc">
+      <p>
+        천상병(千祥炳)은 1930년 일본 효고현에서 태어나
+        해방 후 귀국하여 마산에서 자란 시인입니다.
+        서울대 상대를 중퇴하고 1952년 「강물」로 등단,
+        평생을 시와 가난, 그리고 어린아이 같은 순수함 속에서 살았습니다.
+      </p>
+      <p>
+        1967년 동백림(동베를린) 사건에 연루되어
+        중앙정보부에서 6개월간 무자비한 고문을 당했고,
+        이후 평생 그 후유증에 시달렸습니다.
+        고문의 흔적은 그의 몸과 정신에 깊이 새겨졌지만,
+        그의 시는 오히려 더욱 맑고 천진해졌습니다.
+      </p>
+      <p>
+        「귀천」은 1970년 발표되어 1971년 첫 시집 『새』에 수록되었습니다.
+        고통과 가난 속에서도 이 세상을 '소풍'이라 부르며,
+        삶을 마치고 하늘로 돌아가는 순간을
+        '아름다웠더라'고 말할 수 있는 시인의 마음이 담긴 작품입니다.
+      </p>
+      <p>
+        이슬과 함께 사라지는 새벽빛, 노을 속의 짧은 산책,
+        구름이 손짓하는 마지막 부름 ——
+        시인은 죽음을 두려움이나 슬픔이 아니라
+        본래 있던 자리(歸天)로 돌아가는 자연스러운 귀향(歸鄕)으로 노래합니다.
+      </p>
+      <p>
+        1993년 천상병은 세상을 떠나
+        시 속의 약속처럼 하늘로 돌아갔습니다.
+      </p>
+    </div>
+
+    <button class="back-btn" onclick="GameController.showMenu()">← 돌아가기</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCREEN TRANSITION OVERLAY
+     ═══════════════════════════════════════════ -->
+<div id="screen-transition"></div>
+<div id="stage-interlude">
+  <div class="si-label" id="si-label"></div>
+  <div class="si-title" id="si-title"></div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     STAGE 1 — 새벽빛과 이슬
+     ═══════════════════════════════════════════ -->
+<div class="sw" id="sw1">
+  <svg id="s1cursor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+    <circle cx="10" cy="10" r="4"/>
+    <circle cx="10" cy="10" r="8" fill="none" stroke="rgba(200,225,255,0.3)" stroke-width="0.5"/>
+  </svg>
+  <canvas id="s1bg_canvas"></canvas>
+  <canvas id="s1game_canvas"></canvas>
+  <div id="s1hud">
+    <div id="s1poem_strip">
+      <div class="poem-line" id="s1line0">나 하늘로 돌아가리라.</div>
+      <div class="poem-line" id="s1line1">새벽빛 와 닿으면 스러지는</div>
+      <div class="poem-line" id="s1line2">이슬 더불어 손에 손을 잡고,</div>
+    </div>
+    <div id="s1stage_label">Stage 1 · 새벽빛과 이슬</div>
+    <div id="s1fragment_hud">
+      <div class="frag-dot" id="s1dot0"></div>
+      <div class="frag-dot" id="s1dot1"></div>
+      <div class="frag-dot" id="s1dot2"></div>
+    </div>
+    <div id="s1ctrl">방향키 / WASD · 이동<br>↑ · 점프</div>
+    <div id="s1word_popup"></div>
+  </div>
+  <div id="s1stage_clear">
+    <div class="clear-poem">
+      나 하늘로 돌아가리라.<br>
+      새벽빛 와 닿으면 스러지는<br>
+      이슬 더불어 손에 손을 잡고,
+    </div>
+    <div class="poet-note">— 천상병, 1970</div>
+  </div>
+  <div id="s1title_screen">
+    <div class="title-label">POEM GAME · 제2편</div>
+    <div class="title-main">귀천<br><span class="title-han">歸天</span></div>
+    <div class="title-sub">스테이지 1 — 새벽빛과 이슬</div>
+    <div class="title-author">천상병 (千祥炳)</div>
+    <button id="s1start_btn" onclick="startGame()">시작하기</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     STAGE 2 — 노을빛 기슭
+     ═══════════════════════════════════════════ -->
+<div class="sw" id="sw2">
+  <svg id="s2cursor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
+    <circle cx="9" cy="9" r="3" fill="rgba(255,180,120,0.85)"/>
+    <circle cx="9" cy="9" r="7" fill="none" stroke="rgba(240,150,90,0.3)" stroke-width="0.5"/>
+  </svg>
+  <canvas id="s2bg_canvas"></canvas>
+  <canvas id="s2game_canvas"></canvas>
+  <div id="s2hud">
+    <div id="s2poem_strip">
+      <div class="poem-line" id="s2line0">나 하늘로 돌아가리라.</div>
+      <div class="poem-line" id="s2line1">노을빛 함께 단 둘이서</div>
+      <div class="poem-line" id="s2line2">기슭에서 놀다가 구름 손짓하면은,</div>
+    </div>
+    <div id="s2stage_label">Stage 2 · 노을빛 기슭</div>
+    <div id="s2fragment_hud">
+      <div class="frag-dot" id="s2dot0"></div>
+      <div class="frag-dot" id="s2dot1"></div>
+      <div class="frag-dot" id="s2dot2"></div>
+    </div>
+    <div id="s2ctrl">방향키 이동 · ↑ 점프<br>R · 구름 탑승/하차</div>
+    <div id="s2mount_hint">[ R ] 구름에 올라타기</div>
+    <div id="s2mounted_bar">☁ 구름을 타고 있다</div>
+    <div id="s2word_popup"></div>
+  </div>
+  <div id="s2stage_clear">
+    <div class="clear-poem">
+      나 하늘로 돌아가리라.<br>
+      노을빛 함께 단 둘이서<br>
+      기슭에서 놀다가 구름 손짓하면은,
+    </div>
+    <div class="poet-note">— 천상병, 1970</div>
+  </div>
+  <div id="s2title_screen">
+    <div class="title-label">POEM GAME · 제2편</div>
+    <div class="title-main">노을빛<br>기슭</div>
+    <div class="title-sub">스테이지 2 — 강가의 저녁</div>
+    <div class="title-verse">
+      노을빛 함께 단 둘이서<br>
+      기슭에서 놀다가 구름 손짓하면은,
+    </div>
+    <button id="s2start_btn" onclick="startGame()">시작하기</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     STAGE 3 — 아름다웠더라 (귀천)
+     ═══════════════════════════════════════════ -->
+<div class="sw" id="sw3">
+  <svg id="s3cursor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
+    <circle cx="9" cy="9" r="3" fill="rgba(220,200,255,0.9)"/>
+    <circle cx="9" cy="9" r="7" fill="none" stroke="rgba(190,170,240,0.3)" stroke-width="0.5"/>
+  </svg>
+  <canvas id="s3bg_canvas"></canvas>
+  <canvas id="s3game_canvas"></canvas>
+  <div id="s3hud">
+    <div id="s3poem_strip">
+      <div class="poem-line" id="s3line0">나 하늘로 돌아가리라.</div>
+      <div class="poem-line" id="s3line1">아름다운 이 세상 소풍 끝내는 날,</div>
+      <div class="poem-line" id="s3line2">가서, 아름다웠더라고 말하리라……</div>
+    </div>
+    <div id="s3stage_label">Stage 3 · 아름다웠더라</div>
+    <div id="s3fragment_hud">
+      <div class="frag-dot" id="s3dot0"></div>
+      <div class="frag-dot" id="s3dot1"></div>
+      <div class="frag-dot" id="s3dot2"></div>
+    </div>
+    <div id="s3ctrl">방향키 이동 · ↑ 점프<br>E · 빛 조사</div>
+    <div id="s3word_popup"></div>
+  </div>
+  <div id="s3ascend_overlay">
+    <div id="s3ascend_text"></div>
+  </div>
+  <div id="s3ending_screen">
+    <div id="s3ending_poem">
+      나 하늘로 돌아가리라.<br>
+      새벽빛 와 닿으면 스러지는<br>
+      이슬 더불어 손에 손을 잡고,<br><br>
+      나 하늘로 돌아가리라.<br>
+      노을빛 함께 단 둘이서<br>
+      기슭에서 놀다가 구름 손짓하면은,<br><br>
+      나 하늘로 돌아가리라.<br>
+      아름다운 이 세상 소풍 끝내는 날,<br>
+      가서, 아름다웠더라고 말하리라……
+    </div>
+    <div id="s3ending_poet">— 천상병 (千祥炳), 1970</div>
+    <div id="s3ending_author_note">
+      천상병(1930–1993)은 일본 효고에서 태어난 한국 시인입니다.<br>
+      1967년 동백림 사건의 고문 후유증을 안고 살면서도<br>
+      시는 오히려 어린아이처럼 맑고 천진해졌습니다.<br>
+      이 세상을 잠시 다녀가는 '소풍'이라 부르며,<br>
+      삶의 마지막 순간에 '아름다웠더라'고 말할 수 있던 시인은<br>
+      1993년, 시 속의 약속처럼 하늘로 돌아갔습니다.
+    </div>
+    <button id="s3restart_btn" onclick="location.reload()">처음부터 다시</button>
+  </div>
+  <div id="s3stage_clear">
+    <div class="clear-poem">
+      나 하늘로 돌아가리라.<br>
+      아름다운 이 세상 소풍 끝내는 날,<br>
+      가서, 아름다웠더라고 말하리라……
+    </div>
+    <div class="poet-note">— 천상병, 1970</div>
+  </div>
+  <div id="s3title_screen">
+    <div class="title-label">POEM GAME · 제2편 · 마지막 스테이지</div>
+    <div class="title-main">아름다웠<br>더라</div>
+    <div class="title-sub">스테이지 3 — 별빛 가득한 하늘</div>
+    <div class="title-verse">
+      아름다운 이 세상 소풍 끝내는 날,<br>
+      가서, 아름다웠더라고 말하리라……
+    </div>
+    <button id="s3start_btn" onclick="startGame()">시작하기</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SCRIPTS
+     ═══════════════════════════════════════════ -->
+<script src="js/game.js"></script>
+<script src="js/stage1.js"></script>
+<script src="js/stage2.js"></script>
+<script src="js/stage3.js"></script>
+
+</body>
+</html>
